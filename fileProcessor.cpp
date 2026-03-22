@@ -4,26 +4,6 @@
 fileProcessor::fileProcessor(QObject *parent)
     : QObject(parent){}
 
-void fileProcessor::setSaveMode(saveMode SaveMode) {
-    this->SaveMode = SaveMode;
-}
-
-void fileProcessor::setStartMode(startMode StartMode) {
-    this->StartMode = StartMode;
-}
-
-void fileProcessor::setDeleteMode(bool deleteInputFiles){
-    deleteMode = deleteInputFiles;
-}
-
-void fileProcessor::setTargetDirectory(const QString& targetDirectory) {
-    this->targetDirectory = targetDirectory;
-}
-
-void fileProcessor::setXorKey(const QByteArray& key) {
-    this->key = key;
-}
-
 QString fileProcessor::generatePath(const QString& fileName) const {
     QFileInfo fileInfo(fileName);
     QString fileSuffix = fileInfo.completeSuffix();
