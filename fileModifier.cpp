@@ -188,7 +188,7 @@ void fileModifier::emitRunSignal(const startMode StartMode) {
         setUiEnabled(true);
         return;
     }
-    emit runProcessor(std::move(files));
+    emit runProcessor(files);
 }
 
 QStringList fileModifier::getFiles(const QString& path, const QString& mask) {
