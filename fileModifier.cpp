@@ -10,7 +10,6 @@ fileModifier::fileModifier(QWidget *parent)
     connect(timer, &QTimer::timeout, this, [this](){
         emitRunSignal(startMode::regular);
     });
-
     proc = new fileProcessor();
     procThread = new QThread(this);
     proc->moveToThread(procThread);
@@ -48,7 +47,7 @@ void fileModifier::setupUI() {
     connect(ui.stopBtn, &QPushButton::clicked, this, [this]() {
         if (timer->isActive()) {
             timer->stop();
-            if (!proc->isWorking()){//если кнопка была нажата между запусками, обработчик не сможет дать сигнал об остановке и ui останется заблоктрованным
+            if (!proc->isWorking()){//если кнопка была нажата между запусками, обработчик не сможет дать сигнал об остановке и ui останется заблокированным
                 setUiEnabled(true);
             }
         }
@@ -191,9 +190,11 @@ void fileModifier::emitRunSignal(const startMode StartMode) {
     emit runProcessor(files);
 }
 
-QStringList fileModifier::getFiles(const QString& path, const QString& mask) {
+QStringList fileModifier::getFiles(const QString& path, const QString& masks) {
     QDir dir(path);
-    dir.setNameFilters({mask});
+    QStringList filters = masks.split(",", Qt::SkipEmptyParts);
+    for (auto& filter: filters) filter = filter.trimmed();
+    dir.setNameFilters(filters);
     dir.setFilter(QDir::Files);
     QStringList fileNames = dir.entryList();
     QStringList paths;

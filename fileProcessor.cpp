@@ -108,7 +108,7 @@ bool fileProcessor::processOneFile(const QString& filePath){
     fileFrom.close();
     tmpFile.close();
 
-    QFile::remove(outputPath);//на случай если стоит режим перезаписи. Без удаления tmp может пыаться переименоваться в существующий файл. если режим не стоит, пути никогда не совпадут и ничего не удалится.
+    QFile::remove(outputPath);//на случай если стоит режим перезаписи. Без удаления tmp может пытаться переименоваться в существующий файл. если режим не стоит, пути никогда не совпадут и ничего не удалится.
     if (!tmpFile.rename(outputPath)) {
         fileErr = true;
         tmpFile.remove();
