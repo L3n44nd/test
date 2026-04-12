@@ -20,7 +20,7 @@ QString fileProcessor::generatePath(const QString& fileName) const {
 
     if (!QFile::exists(currFilePath)) return currFilePath;
 
-    int fileNum = 1;
+    uint64_t fileNum = 1;
     while (fileNum < UINT64_MAX) {
         QString newFileName = QString("%1_%2.%3").arg(fileBaseName).arg(fileNum++).arg(fileSuffix);
         QString newPath = QDir(targetDirectory).filePath(newFileName);
