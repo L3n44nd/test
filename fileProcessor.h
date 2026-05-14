@@ -15,17 +15,18 @@ class fileProcessor  : public QObject
 public:
     fileProcessor(QObject *parent = nullptr);
     ~fileProcessor();
-    void setSaveMode(saveMode SaveMode){this->SaveMode = SaveMode;}
-    void setStartMode(startMode StartMode){this->StartMode = StartMode;}
-    void setDeleteMode(bool deleteMode){this->deleteMode = deleteMode;}
-    void setTargetDirectory(const QString& targetDirectory) {this->targetDirectory = targetDirectory;}
-    void setXorKey(const QByteArray& key){this->key = key;}
     bool isWorking() const { return workingNow.load(); }
     void stop() { stopReq.store(true); }
     void resetStopFlag() {stopReq.store(false); }
 
 public slots:
     void run(const QStringList& files);
+
+    void setSaveMode(saveMode SaveMode){this->SaveMode = SaveMode;}
+    void setStartMode(startMode StartMode){this->StartMode = StartMode;}
+    void setDeleteMode(bool deleteMode){this->deleteMode = deleteMode;}
+    void setTargetDirectory(const QString& targetDirectory) {this->targetDirectory = targetDirectory;}
+    void setXorKey(const QByteArray& key){this->key = key;}
 
 signals:
     void error(const QString& info);

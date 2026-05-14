@@ -1,4 +1,5 @@
 #include "fileModifier.h"
+
 #include <QtWidgets/QFileDialog>
 #include <qbuttongroup.h>
 #include <qmessagebox.h>
@@ -151,11 +152,11 @@ void fileModifier::setProcSettings() {
     startMode StartMode = ui.singleRbtn->isChecked() ? startMode::single : startMode::regular;
     bool deleteOrig = ui.deleteInputCheckBox->isChecked();
 
-    proc->setDeleteMode(deleteOrig);
-    proc->setSaveMode(SaveMode);
-    proc->setStartMode(StartMode);
-    proc->setTargetDirectory(targetDir);
-    proc->setXorKey(key);
+    QMetaObject::invokeMethod(proc, "setDeleteMode", Qt::QueuedConnection, deleteOrig);
+    QMetaObject::invokeMethod(proc, "setSaveMode", Qt::QueuedConnection, SaveMode);
+    QMetaObject::invokeMethod(proc, "setStartMode", Qt::QueuedConnection, StartMode);
+    QMetaObject::invokeMethod(proc, "setTargetDirectory", Qt::QueuedConnection, targetDir);
+    QMetaObject::invokeMethod(proc, "setXorKey", Qt::QueuedConnection, key);
     proc->resetStopFlag();
 }
 
