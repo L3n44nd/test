@@ -1,5 +1,4 @@
 #include "fileModifier.h"
-
 #include <QtWidgets/QFileDialog>
 #include <qbuttongroup.h>
 #include <qmessagebox.h>
@@ -58,9 +57,11 @@ void fileModifier::setupUI() {
         ui.progressBar->setValue(curr * 100 / total);
     });
     connect(proc, &fileProcessor::error, this, [this](QString info) {
+        timer->stop();
         QMessageBox::warning(this, "Ошибка", info);
         setUiEnabled(true);
-    });
+    }, Qt::BlockingQueuedConnection);//флаг работы сбрасывается после выполнения этого слота. пока флаг взведён таймер не может запустить обработку, к моменту сброса флага таймер остановлен
+
     connect(proc, &fileProcessor::finished, this, [this](startMode StartMode) {
         if (StartMode == startMode::single) {
             QMessageBox::information(this, "Информация", "Обработка успешно завершена");
@@ -141,7 +142,6 @@ bool fileModifier::settingsIsCorrect() {
 }
 
 void fileModifier::setProcSettings() {
-    QString pathFrom = ui.dirFromField->text();
     QString pathTo = ui.dirToField->text();
     QString targetDir = QDir(pathTo).absolutePath();
 
@@ -178,7 +178,7 @@ void fileModifier::setUiEnabled(bool enabled){
 }
 
 void fileModifier::emitRunSignal(const startMode StartMode) {
-    if (proc->isWorking()) return; //для режима по таймеру (если период таймера меньше чем время обработки файлов)
+    if (proc->isWorking()) return;//для режима по таймеру (если период таймера меньше чем время обработки файлов)
 
     QString pathFrom = ui.dirFromField->text();
     QStringList files = getFiles(pathFrom, ui.maskField->text());
@@ -198,8 +198,8 @@ QStringList fileModifier::getFiles(const QString& path, const QString& masks) {
     dir.setNameFilters(filters);
     dir.setFilter(QDir::Files);
     QStringList fileNames = dir.entryList();
-    QStringList paths;
 
+    QStringList paths;
     for (const auto& fileName : fileNames) {
         paths << dir.absoluteFilePath(fileName);
     }
@@ -208,11 +208,10 @@ QStringList fileModifier::getFiles(const QString& path, const QString& masks) {
 }
 
 void fileModifier::highlightFieldErr(QLineEdit* targetField) {
-    QString fieldStyle = targetField->styleSheet();
-    QString err = fieldStyle + "border: 1px solid red";
+    QString err = "border: 1px solid red";
     targetField->setStyleSheet(err);
-    QTimer::singleShot(2000, targetField, [targetField, fieldStyle]() {
-        targetField->setStyleSheet(fieldStyle);
+    QTimer::singleShot(2000, targetField, [targetField]() {
+        targetField->setStyleSheet("");
     });
 }
 

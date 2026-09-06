@@ -35,17 +35,18 @@ signals:
     void finished(startMode StartMode);
 
 private:
-    bool deleteMode = false;
-    bool fileErr = false;
+    QByteArray buffer;
+    const int buffSize = 10 * 1024 * 1024;
+    char* buffPtr = nullptr;
+
     saveMode SaveMode;
     startMode StartMode;
     QString targetDirectory;
     QByteArray key;
-    QByteArray buffer;
+    bool deleteMode = false;
+
     qint64 bytesProcessed;
     qint64 totalSize;
-    const int buffSize = 10 * 1024 * 1024;
-    char* buffPtr = nullptr;
     std::atomic<bool> stopReq = false;
     std::atomic<bool> workingNow = false;  
 
